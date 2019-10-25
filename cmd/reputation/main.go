@@ -7,6 +7,7 @@ import (
 	feeds "github.com/winstark212/reputation-checker/pkg/feeds"
 )
 
+// ScanResult scan result against feeds
 type ScanResult struct {
 	CommonFeed map[string]string
 }
