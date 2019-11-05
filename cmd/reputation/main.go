@@ -4,6 +4,7 @@ import (
 	"log"
 	"io/ioutil"
 	"encoding/json"
+	"github.com/spf13/cobra"
 	feeds "github.com/winstark212/reputation-checker/pkg/feeds"
 )
 
@@ -37,9 +38,10 @@ func updateFeed(feedType  string) {
 		go feeds.UpdateFeedDB(v, k, flag)
 		<- flag
 	}
+	log.Println("update ", feedType, " successfully!")
 }
 
-func searchIOC(keyword, feedType string) {
+func searchIOC(feedType,keyword  string) {
 	flag := make(chan string)
 	for k, v := range feed[feedType] {
 		go feeds.GetAnalysisFromFile(keyword, v, scanResult.CommonFeed, k, flag)
@@ -48,9 +50,32 @@ func searchIOC(keyword, feedType string) {
 }
 
 func main() {
-	// updateFeed("domain")
-	searchIOC("avvmail.com", "domain")
-	// searchIOC("23.94.213.222", "ip")
-	log.Println(scanResult.CommonFeed)
-	log.Println("halo")
+	var updateFeed = &cobra.Command{
+		Use: "update [type of feed: domain, ip]",
+		Short: "update commond feed, default now are update all",
+		Args: cobra.MinimumNArgs(0),
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) > 0 {
+				updateFeed(args[0])
+			} else {
+				updateFeed("domain")
+				updateFeed("ip")
+			}
+		},
+	}
+
+	var cmdSearch = &cobra.Command{
+		Use: "search [type of feed: domain, ip]",
+		Short: "update commond feed, default now are update all",
+		Args: cobra.MinimumNArgs(2),
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) > 1 {
+				searchIOC(args[0], args[1])
+			}
+		},
+	}
+
+	var rootCmd = &cobra.Command{Use: "app"}
+	rootCmd.AddCommand(updateFeed, cmdSearch)
+	rootCmd.Execute()
 }
