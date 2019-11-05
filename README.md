@@ -19,3 +19,12 @@ Reputation checker is a threat intelligence tool. User can check IPs, domains, U
 ## Common feeds for domain
 * MalwareDomainHosts
 * MandiantAPT
+
+# Usage  
+
+```  
+# windows
+go build -o reputation.exe cmd\reputation\main.go  
+# linux  
+go build -o reputation cmd/reputation/main.go
+```  
