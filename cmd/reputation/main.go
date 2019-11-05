@@ -47,6 +47,12 @@ func searchIOC(feedType,keyword  string) {
 		go feeds.GetAnalysisFromFile(keyword, v, scanResult.CommonFeed, k, flag)
 		<- flag
 	}
+	for k, v := range scanResult.CommonFeed{
+		if v != "" {
+			log.Println( "Found in ", k, " ", v)
+		}
+	}
+
 }
 
 func main() {
@@ -69,7 +75,7 @@ func main() {
 		Short: "update commond feed, default now are update all",
 		Args: cobra.MinimumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) > 1 {
+			if len(args) > 0 {
 				searchIOC(args[0], args[1])
 			}
 		},
